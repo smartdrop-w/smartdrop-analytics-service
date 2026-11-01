@@ -22,10 +22,10 @@ public class AnalyticsServiceApplication {
             String swaggerUrl = "http://localhost:" + port + "/swagger-ui/index.html";
             System.out.println("\n" +
                 "╔════════════════════════════════════════════════════╗\n" +
-                "║    📊 SmartDrop Analytics Service Activo           ║\n" +
+                "║    SmartDrop Analytics Service Activo           ║\n" +
                 "╠════════════════════════════════════════════════════╣\n" +
-                "║  📖 Swagger UI: " + String.format("%-35s", swaggerUrl) + "║\n" +
-                "║  🗄️  Puerto:     " + String.format("%-35s", port) + "║\n" +
+                "║  Swagger UI: " + String.format("%-35s", swaggerUrl) + "║\n" +
+                "║  Puerto:     " + String.format("%-35s", port) + "║\n" +
                 "╚════════════════════════════════════════════════════╝\n");
         };
     }
