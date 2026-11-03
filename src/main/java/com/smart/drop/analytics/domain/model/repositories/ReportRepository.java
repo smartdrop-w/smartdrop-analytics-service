@@ -3,6 +3,8 @@ package com.smart.drop.analytics.domain.model.repositories;
 import com.smart.drop.analytics.domain.model.entities.Metric;
 import com.smart.drop.analytics.domain.model.entities.Report;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +19,12 @@ public interface ReportRepository {
 
     List<Report> findReportsByUserId(Integer userId);
 
+    List<Report> findTop10ReportsByUserId(Integer userId);
+
+    long countReportsByUserId(Integer userId);
+
+    LocalDateTime findLatestReportGeneratedAtByUserId(Integer userId);
+
     List<Report> findAllReports();
 
     Metric saveMetric(Metric metric);
@@ -25,6 +33,11 @@ public interface ReportRepository {
 
     List<Metric> findMetricsByUserId(Integer userId);
 
+    List<Metric> findTop10MetricsByUserId(Integer userId);
+
+    long countMetricsByUserId(Integer userId);
+
+    BigDecimal findAverageMetricValueByUserId(Integer userId);
+
     List<Metric> findMetricsByReportId(Integer reportId);
 }
-

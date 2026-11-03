@@ -9,6 +9,8 @@ import com.smart.drop.analytics.infrastructure.persistence.jpa.repositories.Metr
 import com.smart.drop.analytics.infrastructure.persistence.jpa.repositories.ReportJpaRepository;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -52,6 +54,23 @@ public class ReportRepositoryAdapter implements ReportRepository {
     }
 
     @Override
+    public List<Report> findTop10ReportsByUserId(Integer userId) {
+        return reportJpaRepository.findTop10ByUserIdOrderByGeneratedAtDesc(userId).stream()
+                .map(entity -> toReportDomain(entity, entity.getMetrics().stream().map(this::toMetricDomain).toList()))
+                .toList();
+    }
+
+    @Override
+    public long countReportsByUserId(Integer userId) {
+        return reportJpaRepository.countByUserId(userId);
+    }
+
+    @Override
+    public LocalDateTime findLatestReportGeneratedAtByUserId(Integer userId) {
+        return reportJpaRepository.findLatestGeneratedAtByUserId(userId);
+    }
+
+    @Override
     public List<Report> findAllReports() {
         return reportJpaRepository.findAll().stream()
                 .map(entity -> toReportDomain(entity, findMetricsByReportId(entity.getReportId())))
@@ -73,6 +92,24 @@ public class ReportRepositoryAdapter implements ReportRepository {
     @Override
     public List<Metric> findMetricsByUserId(Integer userId) {
         return metricJpaRepository.findByUserId(userId).stream().map(this::toMetricDomain).toList();
+    }
+
+    @Override
+    public List<Metric> findTop10MetricsByUserId(Integer userId) {
+        return metricJpaRepository.findTop10ByUserIdOrderByRecordedAtDesc(userId).stream()
+                .map(this::toMetricDomain)
+                .toList();
+    }
+
+    @Override
+    public long countMetricsByUserId(Integer userId) {
+        return metricJpaRepository.countByUserId(userId);
+    }
+
+    @Override
+    public BigDecimal findAverageMetricValueByUserId(Integer userId) {
+        Double avg = metricJpaRepository.findAverageValueByUserId(userId);
+        return avg != null ? BigDecimal.valueOf(avg).setScale(2, RoundingMode.HALF_UP) : BigDecimal.ZERO;
     }
 
     @Override
@@ -121,4 +158,3 @@ public class ReportRepositoryAdapter implements ReportRepository {
         );
     }
 }
-
