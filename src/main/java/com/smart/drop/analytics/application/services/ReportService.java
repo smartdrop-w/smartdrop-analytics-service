@@ -59,7 +59,20 @@ public class ReportService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
+    public List<Metric> getMetricsByReportId(Integer reportId) {
+        // Valida existencia del reporte
+        getReportById(reportId);
+        return reportRepository.findMetricsByReportId(reportId);
+    }
+
+    public Metric addMetricToReport(Integer reportId, MetricDraft draft) {
+        Report report = getReportById(reportId);
+        Metric metric = Metric.create(report.userId(), reportId, draft.name(), draft.value(), draft.unit());
+        List<Metric> saved = reportRepository.saveMetrics(List.of(metric));
+        return saved.isEmpty() ? metric : saved.get(0);
+    }
+
     public record MetricDraft(String name, BigDecimal value, String unit) {
     }
 }
-
